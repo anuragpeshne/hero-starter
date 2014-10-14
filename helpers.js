@@ -117,12 +117,14 @@ helpers.findNearestObjectDirectionAndDistance = function(board, fromTile, tileCa
             // And update the coords of our current path
             coords = coords[3];
           }
+		  //to-do: check if the new tile is safe
 
           //Return object with the following pertinent info
           return {
             direction: correctDirection,
             distance: distance,
-            coords: finalCoords
+            coords: finalCoords,
+			targetTile: nextTile
           };
 
           // If the tile is unoccupied, then we need to push it into our queue

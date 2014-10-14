@@ -152,22 +152,50 @@ var move = function(gameData, helpers) {
   var distanceToHealthWell = healthWellStats.distance;
   var directionToHealthWell = healthWellStats.direction;
   
-  var weakerEnemyStats = helpers.findNearestObjectDirectionAndDistance(gameData.board, myHero, function(enemyTile) {
-    return enemyTile.type === 'Hero' && enemyTile.team !== hero.team && enemyTile.health < hero.health;
+  var nearestEnemyStats = helpers.findNearestObjectDirectionAndDistance(gameData.board, myHero, function(enemyTile) {
+    return enemyTile.type === 'Hero' && enemyTile.team !== hero.team;
+  });
+
+  var nearestFriend = helpers.findNearestObjectDirectionAndDistance(gameData.board, myHero, function(friendTile) {
+  	return friendTile.type === 'Hero' && friendTile === hero.team;
+  });
+
+  var nearestNonTeamMine = helpers.findNearestObjectDirectionAndDistance(gameData.board, myHero, function(mineTile) {
+  	if (mineTile.type === 'DiamondMine') {
+      if (mineTile.owner) {
+        return mineTile.owner.team !== myHero.team;
+      } else {
+        return true;
+      }
+    } else {
+      return false;
+    } 
   });
 
   if (myHero.health < 40) {
     //Heal no matter what if low health
+	console.log("heal->177")
     return directionToHealthWell;
-  } else if (myHero.health < 100 && distanceToHealthWell === 1) {
+  } else if (myHero.health < 80 && distanceToHealthWell === 1) {
     //Heal if you aren't full health and are close to a health well already
+	console.log("heal more -> 181");
     return directionToHealthWell; 
   } else {
     //If healthy, go capture a diamond mine! or attack someone
-	if(weakerEnemyStats.distance < distanceToHealthWell)
-		return weakerEnemyStats.direction;
-	else
-    	return helpers.findNearestNonTeamDiamondMine(gameData);
+	if(nearestEnemyStats.distance === 1 && (nearestEnemyStats.targetTile.health <= 30 || nearestEnemyStats.targetTile.health < myHero.health)){
+		console.log("free kill or easy kill->186");
+		return nearestEnemyStats.direction;
+	} else if(nearestEnemyStats.targetTile.health < myHero.health &&  nearestEnemyStats.distance < nearestNonTeamMine.distance){
+		console.log("damage! -> 190");
+		return nearestEnemyStats.direction;
+	} else if(nearestNonTeamMine.distance > 1 && nearestFriend.distance === 1){
+		console.log("heal friend -> 192");
+		return nearestFriend.direction;
+	}
+	else{
+		console.log("mine ->196");
+    	return nearestNonTeamMine.direction;
+	}
   }
 };
 // Export the move function here
