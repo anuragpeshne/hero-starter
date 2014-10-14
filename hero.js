@@ -193,8 +193,14 @@ var move = function(gameData, helpers) {
 		return nearestFriend.direction;
 	}
 	else{
-		console.log("mine ->196");
-    	return nearestNonTeamMine.direction;
+		if(typeof(nearestNonTeamMine.direction) !== "undefined"){
+			console.log("mine ->197");
+	    	return nearestNonTeamMine.direction;
+		}
+		else{
+			console.log("last option: attack!");
+			nearestEnemyStats.direction;
+		}
 	}
   }
 };
