@@ -199,7 +199,7 @@ var move = function(gameData, helpers) {
 		}
 		else{
 			console.log("last option: attack!");
-			nearestEnemyStats.direction;
+			return nearestEnemyStats.direction;
 		}
 	}
   }
