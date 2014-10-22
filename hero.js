@@ -182,8 +182,8 @@ var move = function(gameData, helpers) {
     return directionToHealthWell; 
   } else {
     //If healthy, go capture a diamond mine! or attack someone
-	if(nearestEnemyStats.distance === 1 && (nearestEnemyStats.targetTile.health <= 30 || nearestEnemyStats.targetTile.health < myHero.health)){
-		console.log("free kill or easy kill->186");
+	if(nearestEnemyStats.distance === 1){
+		console.log("damage! ->186");
 		return nearestEnemyStats.direction;
 	} else if(nearestEnemyStats.targetTile.health < myHero.health &&  nearestEnemyStats.distance < nearestNonTeamMine.distance){
 		console.log("damage! -> 190");
