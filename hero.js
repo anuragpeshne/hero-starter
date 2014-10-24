@@ -188,7 +188,7 @@ var move = function(gameData, helpers) {
 	} else if(nearestEnemyStats.targetTile.health < myHero.health &&  nearestEnemyStats.distance < nearestNonTeamMine.distance){
 		console.log("damage! -> 190");
 		return nearestEnemyStats.direction;
-	} else if(nearestNonTeamMine.distance > 1 && nearestFriend.distance === 1){
+	} else if(nearestNonTeamMine.distance > 1 && nearestFriend.distance === 1 && nearestFriend.health <= 30){
 		console.log("heal friend -> 192");
 		return nearestFriend.direction;
 	}
