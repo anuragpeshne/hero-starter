@@ -200,7 +200,7 @@ var move = function(gameData, helpers) {
   });
 
   var nearestFriend = helpers.findNearestObjectDirectionAndDistance(gameData.board, myHero, function(friendTile) {
-  	return friendTile.type === 'Hero' && friendTile === hero.team;
+  	return friendTile.type === 'Hero' && friendTile.team === hero.team;
   });
 
   var nearestNonTeamMine = helpers.findNearestObjectDirectionAndDistance(gameData.board, myHero, function(mineTile) {
@@ -215,20 +215,30 @@ var move = function(gameData, helpers) {
     } 
   });
 
+  var nearestGrave = helpers.findNearestObjectDirectionAndDistance(gameData.board, myHero, function(graveTile) {
+	if (graveTile.type === "Unoccupied" && graveTile.subType === 'Bones')
+		return true;
+	else
+		return false;
+  });
+	console.log("as"+nearestGrave);
   if (myHero.health < 40) {
     //Heal no matter what if low health
 	console.log("heal->177")
     return directionToHealthWell;
-  } else if (myHero.health < 80 && distanceToHealthWell === 1) {
+  } else if (myHero.health < 100 && distanceToHealthWell === 1) {
     //Heal if you aren't full health and are close to a health well already
 	console.log("heal more -> 181");
     return directionToHealthWell; 
   } else {
     //If healthy, go capture a diamond mine! or attack someone
-	if(nearestEnemyStats.distance === 1){
-		console.log("damage! ->186");
+	if(nearestEnemyStats.distance === 1 && nearestEnemyStats.health !== 100){//there is some bug. cant recognise enemy. hence...FIX THIS
+		console.log("aaahhhhhh damage! ->186");
 		return nearestEnemyStats.direction;
-	} else if(nearestEnemyStats.targetTile.health < myHero.health &&  nearestEnemyStats.distance < nearestNonTeamMine.distance){
+	} else if(nearestGrave !== false && nearestGrave.distance === 1){
+		console.log("Loot! -> 239");
+		return nearestGrave.direction;
+	}else if(nearestEnemyStats.health < myHero.health &&  nearestEnemyStats.distance < nearestNonTeamMine.distance){
 		console.log("damage! -> 190");
 		return nearestEnemyStats.direction;
 	} else if(nearestNonTeamMine.distance > 1 && nearestFriend.distance === 1 && nearestFriend.health <= 30){
@@ -236,7 +246,7 @@ var move = function(gameData, helpers) {
 		return nearestFriend.direction;
 	}
 	else{
-		if(typeof(nearestNonTeamMine.direction) !== "undefined"){
+		if(nearestNonTeamMine !== false){
 			console.log("mine ->197");
 	    	return nearestNonTeamMine.direction;
 		}
