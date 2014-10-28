@@ -232,7 +232,7 @@ var move = function(gameData, helpers) {
     return directionToHealthWell; 
   } else {
     //If healthy, go capture a diamond mine! or attack someone
-	if(nearestEnemyStats.distance === 1 && nearestEnemyStats.health !== 100){//there is some bug. cant recognise enemy. hence...FIX THIS
+	if(nearestEnemyStats.distance === 1 ){//there is some bug. cant recognise enemy. hence...FIX THIS
 		console.log("aaahhhhhh damage! ->186");
 		return nearestEnemyStats.direction;
 	} else if(nearestGrave !== false && nearestGrave.distance === 1){
