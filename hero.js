@@ -232,13 +232,13 @@ var move = function(gameData, helpers) {
     return directionToHealthWell; 
   } else {
     //If healthy, go capture a diamond mine! or attack someone
-	if(nearestEnemyStats.distance === 1 ){//there is some bug. cant recognise enemy. hence...FIX THIS
+	if(nearestEnemyStats.distance === 1 ){
 		console.log("aaahhhhhh damage! ->186");
 		return nearestEnemyStats.direction;
 	} else if(nearestGrave !== false && nearestGrave.distance === 1){
 		console.log("Loot! -> 239");
 		return nearestGrave.direction;
-	}else if(nearestEnemyStats.health < myHero.health &&  nearestEnemyStats.distance < nearestNonTeamMine.distance){
+	}else if(nearestEnemyStats.distance < nearestNonTeamMine.distance){
 		console.log("damage! -> 190");
 		return nearestEnemyStats.direction;
 	} else if(nearestNonTeamMine.distance > 1 && nearestFriend.distance === 1 && nearestFriend.health <= 30){
@@ -246,14 +246,18 @@ var move = function(gameData, helpers) {
 		return nearestFriend.direction;
 	}
 	else{
-		if(nearestNonTeamMine !== false){
-			console.log("mine ->197");
-	    	return nearestNonTeamMine.direction;
+		var options = [nearestNonTeamMine, nearestEnemyStats, nearestGrave];
+		var i =0;
+		var whereToGo = {distance:9999, direction: null};
+		for(i = 0; i < options.length; i++){
+			if(options[i] !== false){
+				if(options[i].distance < whereToGo.distance){
+					whereToGo.distance = options[i].distance;
+					whereToGo.direction = options[i].direction;
+				}
+			}
 		}
-		else{
-			console.log("last option: attack!");
-			return nearestEnemyStats.direction;
-		}
+		return whereToGo.direction;
 	}
   }
 };
